@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- font-awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/3.1.6/footable.bootstrap.min.css" />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">呼吸音視覺化系統</a>
+    </nav>
+
+    <div class="container">
+        <table class="mt-2 table table-striped table-hover"></table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/3.1.6/footable.js"></script>
+    <script>
+        jQuery(function ($) {
+            $('.table').footable({
+                "paging": {
+                    "enabled": true
+                },
+                "filtering": {
+                    "enabled": false
+                },
+                "sorting": {
+                    "enabled": true
+                },
+                "columns": [{
+                        "name": "patient_id",
+                        "title": "病歷號碼",
+                        formatter: function (value) {
+                            return "<button class='btn btn-primary' onclick=detail('" + value +
+                                "')>" + value + "</button>"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "title": "姓名"
+                    },
+                    {
+                        "name": "birth",
+                        "title": "生日"
+                    },
+                    {
+                        "name": "sexual",
+                        "title": "性別"
+                    },
+                    {
+                        "name": "mmrc",
+                        "title": "MMRC"
+                    },
+                    {
+                        "name": "cat",
+                        "title": "CAT"
+                    }
+
+                ],
+                "rows": $.getJSON('/getAllPatients')
+            });
+        });
+
+        function detail(patientId) {
+            console.log(patientId);
+            window.location = '/review?patientId=' + patientId;
+        }
+    </script>
+</body>
+
+</html>

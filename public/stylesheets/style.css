@@ -1,0 +1,297 @@
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+
+/* review */
+
+.body-img {
+    width: 95%;
+}
+
+.caseWrapper {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+}
+
+.caseWrapper .row {
+    color: #fff;
+    padding: 10px;
+}
+
+.caseWrapper .table {
+    color: #fff;
+}
+
+#caseByDayTable,
+#caseByPartTable {
+
+    margin: 100px;
+
+}
+
+.weekly-chart {
+    width: 450px;
+    height: 250px;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.custom-checkbox .custom-control-label::before {
+    top: 0;
+}
+
+.circle {
+    /* margin: 10px; */
+    height: 80px;
+    width: 80px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 2px solid #494A4B;
+    transition: all .2s ease-in-out;
+}
+
+/* .circle:hover {
+    transform: scale(1.2);
+} */
+.F1 {
+    position: absolute;
+    left: 12%;
+    top: 33%;
+}
+
+.circle1 {
+    position: absolute;
+    left: 13%;
+    top: 33%;
+    z-index: 999;
+}
+
+.F2 {
+    position: absolute;
+    left: 25%;
+    top: 33%;
+}
+
+.circle2 {
+    position: absolute;
+    left: 26%;
+    top: 33%;
+    z-index: 999;
+}
+
+.F3 {
+    position: absolute;
+    left: 12%;
+    top: 49%;
+}
+
+.circle3 {
+    position: absolute;
+    left: 13%;
+    top: 49%;
+}
+
+.F4 {
+    position: absolute;
+    left: 25%;
+    top: 49%;
+}
+
+.circle4 {
+    position: absolute;
+    left: 26%;
+    top: 49%;
+}
+
+.B1 {
+    position: absolute;
+    left: 61%;
+    top: 33%;
+}
+
+.circle5 {
+    position: absolute;
+    left: 62%;
+    top: 33%;
+}
+
+.B2 {
+    position: absolute;
+    left: 74%;
+    top: 33%;
+}
+
+.circle6 {
+    position: absolute;
+    left: 75%;
+    top: 33%;
+}
+
+.circle-bgc-orange {
+    background-color: orange;
+}
+
+.circle-bgc-yellow {
+    background-color: #ffff00;
+}
+
+.circle-bgc-green {
+    background-color: #008000;
+}
+
+.circle-bgc-blue {
+    background-color: #0000ff;
+}
+
+.circle-bgc-indigo {
+    background-color: #4b0082;
+}
+
+.circle-bgc-violet {
+    background-color: #ee82ee;
+}
+
+.list {
+    position: absolute;
+    bottom: -20px;
+    left: -30px;
+    display: none;
+    opacity: 0;
+    width: 200px;
+}
+
+.list button {
+    transition: all .2s ease-in-out;
+    display: inline-block;
+}
+
+.circle:hover>.list {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.show {
+    display: block;
+}
+
+
+#feature-chart,
+#waveform-chart {
+    width: 800px;
+    height: 400px;
+}
+
+/* #mark {
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+}
+
+*/
+#forward-input {
+    width: 100px;
+}
+
+
+/* footable */
+.fooicon {
+    font-family: FontAwesome !important;
+}
+
+.fooicon-loader:before {
+    /*Old Glyph - content: "\e030";*/
+    content: "\f01e" !important;
+}
+
+.fooicon-plus:before {
+    /*Old Glyph - content: "\2b";*/
+    content: "\f067" !important;
+}
+
+.fooicon-minus:before {
+    /*Old Glyph - content: "\2212";*/
+    content: "\f068" !important;
+}
+
+.fooicon-search:before {
+    /*Old Glyph - content: "\e003";*/
+    content: "\f002" !important;
+}
+
+.fooicon-remove:before {
+    /*Old Glyph - content: "\e014";*/
+    content: "\f00d" !important;
+}
+
+.fooicon-sort:before {
+    /*Old Glyph - content: "\e150";*/
+    content: "\f0dc" !important;
+}
+
+.fooicon-sort-asc:before {
+    /*Old Glyph - content: "\e155";*/
+    content: "\f0de" !important;
+}
+
+.fooicon-sort-desc:before {
+    /*Old Glyph - content: "\e156";*/
+    content: "\f0dd" !important;
+}
+
+.fooicon-pencil:before {
+    /*Old Glyph - content: "\270f";*/
+    content: "\f040" !important;
+}
+
+.fooicon-trash:before {
+    /*Old Glyph - content: "\e020";*/
+    content: "\f1f8" !important;
+}
+
+.fooicon-eye-close:before {
+    /*Old Glyph - content: "\e106";*/
+    content: "\f070" !important;
+}
+
+.fooicon-flash:before {
+    /*Old Glyph - content: "\e162";*/
+    content: "\f0e7" !important;
+}
+
+.fooicon-cog:before {
+    /*Old Glyph - content: "\e019";*/
+    content: "\f013" !important;
+}
