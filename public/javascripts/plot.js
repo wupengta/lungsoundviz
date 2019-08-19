@@ -52,44 +52,31 @@ var Plot = {
     waveStart: 0,
     waveEnd: 30,
     featureSection: [],
-    play: async function (part, time) {
+    play: async function (feature_id, time, part, patient_id, date) {
         $.blockUI(Plot.blockElm);
 
-        // let date = $('#datepicker').val().replace(/\\|\//g, '');
-        // let zeroPatientId = '0000' + $("#hPatientId").val();
-        // console.log(zeroPatientId + '_' + date + '_' + time + '_' + part + '.wav');
-        $('#iAudioName').val('demo.wav');
-        // $('#feature-audio').attr('src', '/sounds/' + zeroPatientId + '_' + date + '_' + time + '_' + part + '.wav');
-        $('#feature-audio').attr('src', '/sounds/demo.wav');
-        $('#fullAudio').attr('src', '/sounds/demo.wav');
-        // let audioBuffer = await Plot.readAudioFile(zeroPatientId + '_' + date + '_' + time + '_' + part + '.wav');
+        // audioName是這位病患當天上午或下午某個部位的錄音檔名，規則為00001_20190806_pm_F1.wav，
+        // 因為音檔不夠多所以此雛形系統都命名為demo，日後應該要到一個file server中去fetch真實音檔，帶入到以下程式中。
+        // let zero_patient_id = patient_id.padStart(5, "0");
+        // let audioName = `${zero_patient_id}_${date}_${time}_${part}.wav`;
+        // $('#audioName').val(audioName);
+        // let audioBuffer = await Plot.readAudioFile(audioName);
+
+        $('#audioName').val('demo.wav');
         let audioBuffer = await Plot.readAudioFile('demo.wav');
-        // console.log(audioBuffer.numberOfChannels, audioBuffer.length, audioBuffer.sampleRate, audioBuffer.duration);
+
         let pcmdata = Array.prototype.slice.call(audioBuffer.getChannelData(0));
-        // console.log(pcmdata);
         let chart = echarts.init(document.getElementById('feature-chart'), {
             renderer: 'canvas'
         });
-        let acfData = ACF.genarator1(pcmdata);
-        // let acfData = await $.getJSON('/getAcfData?file=' + zeroPatientId + '_' + date + '_' + time + '_' + part + '.wav');
 
-        if (acfData.length === 0) {
-            acfData = ACF.genarator1(pcmdata);
-        }
-
-        let data = acfData.map((acf, i) => {
-
-            let end = (acf.end - acf.start) / 2;
-            // end = end < 250 ? 250 : end;
-            // if (end - acf.start < 16) {
-            //     end = acf.start + 16;
-            // }
-
+        Plot.featureSection = await $.getJSON(`/getFeatureSection?feature_id=${feature_id}`);
+        let data = Plot.featureSection.map(section => {
             return {
                 value: [
                     0,
-                    acf.start * 16 / 1000,
-                    (acf.start + end) * 16 / 1000,
+                    section.start,
+                    section.end,
                 ],
                 itemStyle: {
                     normal: {
@@ -98,10 +85,6 @@ var Plot = {
                 }
             }
         });
-
-        Plot.featureSection = data.map(d => d.value.slice(1, 3));
-        console.log(JSON.stringify(Plot.featureSection));
-        // Plot.featureAudio = new Audio('/sounds/' + $('#iAudioName').val() + '#t=' + Plot.featureSection[0][0] + ',' + Plot.featureSection[0][1]);
 
         function renderItem(params, api) {
 
@@ -168,28 +151,16 @@ var Plot = {
 
         chart.on('click', function (params) {
             Plot.seriesIdx = params.dataIndex;
-            // console.log(params.value);
             Plot.featurePlayStart = params.value[1];
             Plot.featurePlayEnd = params.value[2];
 
-            let audioName = $('#iAudioName').val();
+            let audioName = $('#audioName').val();
             Plot.featurePlayStart = parseFloat(Plot.featurePlayStart) - parseFloat($('#forward-input').val());
             Plot.featurePlayStart = Plot.featurePlayStart < 0 ? 0 : Plot.featurePlayStart;
 
             Plot.featureAudio = document.createElement('AUDIO');
+            // 此為雛型系統故音檔放在專案中的某個資料夾，日後應該要有一個file server存放音檔，window.fetch中帶入音檔的url位置
             Plot.featureAudio.src = '/sounds/' + audioName + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd;
-            // Plot.featureAudio.addEventListener('timeupdate', function (e) {
-            //     curtime = parseInt(song.currentTime, 10);
-            //     $("#seek").attr("value", curtime);
-            // });
-            // Plot.featureAudio.addEventListener('ended', function (e) {
-            //     console.log(e);
-            // });
-            // audio.play();
-
-            // Plot.featureAudio = document.getElementById("fAudio");
-            // Plot.featureAudio.src = '/sounds/' + audioName + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd
-            // Plot.featureAudio = new Audio('/sounds/' + audioName + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd);
 
             const instance = echarts.getInstanceByDom(document.getElementById('feature-chart'));
             const insOpt = instance.getOption();
@@ -253,8 +224,6 @@ var Plot = {
         waveform_chart.setOption(waveform_option);
 
         waveform_chart.on('datazoom', function (params) {
-            console.log(params.start * 30 / 100);
-            console.log(params.end * 30 / 100);
 
             Plot.waveStart = params.start * 30 / 100;
             Plot.waveEnd = (params.end * 30 / 100) === 0 ? 30 : (params.end * 30 / 100);
@@ -281,6 +250,7 @@ var Plot = {
             sampleRate: 4000
         });
         return new Promise(function (resolve, reject) {
+            // 此為雛型系統故音檔放在專案中的某個資料夾，日後應該要有一個file server存放音檔，window.fetch中帶入音檔的url位置
             window.fetch('/sounds/' + audoiFile)
                 .then(response => response.arrayBuffer())
                 .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
@@ -317,7 +287,8 @@ var Plot = {
         // console.log(Plot.featurePlayStart, Plot.featurePlayEnd);
         Plot.featurePlayStart = parseFloat(Plot.featurePlayStart) - parseFloat($('#forward-input').val());
         Plot.featurePlayStart = Plot.featurePlayStart < 0 ? 0 : Plot.featurePlayStart;
-        Plot.featureAudio = new Audio('/sounds/' + $('#iAudioName').val() + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd);
+        // 此為雛型系統故音檔放在專案中的某個資料夾，日後應該要有一個file server存放音檔，window.fetch中帶入音檔的url位置
+        Plot.featureAudio = new Audio('/sounds/' + $('#audioName').val() + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd);
 
         insOpt.series[0].data.forEach((d, i) => {
             if (i === Plot.seriesIdx) {
@@ -338,7 +309,8 @@ var Plot = {
 
         Plot.featurePlayStart = parseFloat(Plot.featurePlayStart) - parseFloat($('#forward-input').val());
         let start = Plot.featurePlayStart < 0 ? 0 : Plot.featurePlayStart;
-        Plot.featureAudio = new Audio('/sounds/' + $('#iAudioName').val() + '#t=' + start + ',' + Plot.featurePlayEnd);
+        // 此為雛型系統故音檔放在專案中的某個資料夾，日後應該要有一個file server存放音檔，window.fetch中帶入音檔的url位置
+        Plot.featureAudio = new Audio('/sounds/' + $('#audioName').val() + '#t=' + start + ',' + Plot.featurePlayEnd);
 
     },
     featureAudio: {},
@@ -346,27 +318,15 @@ var Plot = {
         console.log("isPlayFeature:" + isPlayFeature);
 
         Plot.featureAudio.play();
-        // $(Plot.featureAudio).on('end', function () {
-        //     console.log("ended");
-        // });
-        Plot.featureAudio = new Audio('/sounds/' + $('#iAudioName').val() + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd);
-
-        // if (Plot.featureAudio.currentTime > duration) {
-        //     Plot.featureAudio = new Audio('/sounds/' + $('#iAudioName').val() + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd);
-        //     console.log("finish");
-        //     // Plot.featureAudio.pause();
-        //     isPlayFeature = false;
-
-        //     console.log("set isPlayFeature to " + isPlayFeature);
-        // }
+        // 此為雛型系統故音檔放在專案中的某個資料夾，日後應該要有一個file server存放音檔，window.fetch中帶入音檔的url位置
+        Plot.featureAudio = new Audio('/sounds/' + $('#audioName').val() + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd);
         draw();
 
     },
     pauseSelectedFeature: function () {
-        // console.log(Plot.featureAudio.currentTime);
-        // console.log(Plot.featureAudio.duration);
         Plot.featureAudio.pause();
-        Plot.featureAudio = new Audio('/sounds/' + $('#iAudioName').val() + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd);
+        // 此為雛型系統故音檔放在專案中的某個資料夾，日後應該要有一個file server存放音檔，window.fetch中帶入音檔的url位置
+        Plot.featureAudio = new Audio('/sounds/' + $('#audioName').val() + '#t=' + Plot.featurePlayStart + ',' + Plot.featurePlayEnd);
     },
     playall: function () {
         let audio = document.getElementById("feature-audio");
@@ -382,10 +342,11 @@ var Plot = {
     waveAudio: {},
     playwave: function () {
 
-        let audioName = $('#iAudioName').val();
+        let audioName = $('#audioName').val();
         let from = parseFloat(Plot.waveStart);
         let end = parseFloat(Plot.waveEnd);
         console.log(Plot.waveStart, Plot.waveEnd);
+        // 此為雛型系統故音檔放在專案中的某個資料夾，日後應該要有一個file server存放音檔，window.fetch中帶入音檔的url位置
         Plot.waveAudio = new Audio('/sounds/' + audioName + '#t=' + from + ',' + end);
         Plot.waveAudio.play();
     },

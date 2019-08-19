@@ -1,5 +1,6 @@
 const patientModel = require('../models/PatientModel');
 const featureModel = require('../models/FeatureModel');
+const featureSectionModel = require('../models/FeatureSectionModel');
 const moment = require('moment');
 
 module.exports = {
@@ -33,6 +34,11 @@ module.exports = {
         const last7Day = moment(date, 'YYYY/MM/DD').subtract('6', 'days').format('YYYY/MM/DD');
         const features = await featureModel.findFeatures(patient_id, last7Day, date, feature);
         res.json(features);
+    },
+    getFeatureSection: async function (req, res, next) {
+        const feature_id = req.query.feature_id;
+        const featureSection = await featureSectionModel.findFeatureSectionById(feature_id);
+        res.json(featureSection);
     },
     getCaseByDayData: async function (req, res, next) {
         const feature = req.query.feature;

@@ -197,8 +197,6 @@ var Chart = {
             return feature.patient_id + '' === $("#hPatientId").val() && moment(feature.upload_date).format('YYYY/MM/DD') === $("#datepicker").val();
         }), 'part');
 
-        // console.log(singleDay);
-
         Object.keys(singleDay).forEach(part => {
             const part_chart = echarts.init(document.getElementById(part));
             const part_option = {
@@ -233,12 +231,12 @@ var Chart = {
                 }],
             };
             part_chart.setOption(part_option);
+            // console.log(singleDay[part]);
+            let date = $('#datepicker').val().replace(/\\|\//g, '');
             $('#' + part).append(
                 '<div class="list show">' +
-                '<button onclick=Plot.play("' + part +
-                '","am") class="btn btn-light btn-sm">早上&nbsp;<i class="far fa-play-circle"></i></button>' +
-                '<button onclick=Plot.play("' + part +
-                '","pm") class="btn btn-light btn-sm">下午&nbsp;<i class="far fa-play-circle"></i></button>' +
+                '<button onclick=Plot.play(\'' + singleDay[part][0].feature_id + '\',\'am\',\'' + singleDay[part][0].part + '\',\'' + singleDay[part][0].patient_id + '\',\'' + date + '\') class="btn btn-light btn-sm">早上&nbsp;<i class="far fa-play-circle"></i></button>' +
+                '<button onclick=Plot.play(\'' + singleDay[part][1].feature_id + '\',\'pm\',\'' + singleDay[part][1].part + '\',\'' + singleDay[part][1].patient_id + '\',\'' + date + '\') class="btn btn-light btn-sm">下午&nbsp;<i class="far fa-play-circle"></i></button>' +
                 '</div>'
             );
         });
