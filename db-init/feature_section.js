@@ -35,7 +35,7 @@ for (let i = 1; i <= 17568; i++) {
     });
 }
 
-console.log(datas);
+// console.log(datas);
 
 pool.getConnection(function (err, connection) {
 
