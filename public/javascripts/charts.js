@@ -75,7 +75,7 @@ var Chart = {
             series.push({
                 name: $(elem).attr('id'),
                 type: 'line',
-                data: percentage,
+                data: percentage.reverse(),
                 color: $(elem).data('color')
             });
         });
@@ -170,7 +170,7 @@ var Chart = {
             series.push({
                 name: $(elem).attr('id'),
                 type: 'line',
-                data: percentage,
+                data: percentage.reverse(),
                 color: $(elem).data('color')
             });
         });
